@@ -1475,6 +1475,17 @@
                 <button class="btn primary" id="markPaidBtn" type="button">Tandai lunas</button>
                 <button class="btn" id="printInvoiceBtn" type="button">Cetak struk / PDF</button>
                 <button class="btn" id="shareWhatsAppBtn" type="button">Bagikan WA</button>
+                <div class="field" style="width: 100%;">
+                  <label for="messageTemplate">Template pesan client</label>
+                  <select id="messageTemplate">
+                    <option value="received">Order diterima</option>
+                    <option value="invoice">Invoice dikirim</option>
+                    <option value="reminder">Pengingat pembayaran</option>
+                    <option value="done">Pekerjaan selesai</option>
+                    <option value="revision">Revisi diterima</option>
+                  </select>
+                </div>
+                <button class="btn" id="sendTemplateBtn" type="button">Kirim template WA</button>
               </div>
             </div>
           </div>
@@ -1605,7 +1616,7 @@
     const demoState = {
       settings: {
         businessName: "CV. Simpul Project Academy",
-        businessContact: "WhatsApp: 085262608383 | Email: aroelcendekia@gmial.com",
+        businessContact: "WhatsApp: 085262608383 | Email: aroelcendekia@gmail.com",
         businessAddress: "Indonesia",
         bankInfo: "BCA 1234567890 a.n. Nama Usaha",
         invoiceNote: "Pembayaran dapat dilakukan melalui rekening di atas. Mohon konfirmasi setelah transfer."
@@ -1764,6 +1775,7 @@
     });
     document.getElementById("printInvoiceBtn").addEventListener("click", printReceipt);
     document.getElementById("shareWhatsAppBtn").addEventListener("click", shareReceiptWhatsApp);
+    document.getElementById("sendTemplateBtn").addEventListener("click", sendClientTemplate);
     document.getElementById("markPaidBtn").addEventListener("click", markSelectedPaid);
 
     els.orderForm.addEventListener("submit", event => {
@@ -2388,6 +2400,69 @@
       window.open(url, "_blank", "noopener,noreferrer");
     }
 
+    function sendClientTemplate() {
+      const order = state.orders.find(item => item.id === selectedInvoiceId);
+      if (!order) {
+        toast("Pilih invoice dulu.");
+        return;
+      }
+      const type = document.getElementById("messageTemplate").value;
+      const text = buildTemplateText(order, type);
+      window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank", "noopener,noreferrer");
+    }
+
+    function buildTemplateText(order, type) {
+      const invoiceNo = order.invoiceNo || makeInvoiceNo(order);
+      const total = rupiah.format(Number(order.price || 0));
+      const remaining = rupiah.format(balance(order));
+      const templates = {
+        received: [
+          "Halo " + order.clientName + ",",
+          "",
+          "Order Anda untuk project *" + order.projectName + "* sudah kami terima.",
+          "Tim CV. Simpul Project Academy akan mengecek brief dan mengonfirmasi harga, jadwal, serta invoice.",
+          "",
+          "Terima kasih."
+        ],
+        invoice: [
+          "Halo " + order.clientName + ",",
+          "",
+          "Berikut invoice untuk project *" + order.projectName + "*.",
+          "No invoice: " + invoiceNo,
+          "Total: " + total,
+          "Sisa tagihan: " + remaining,
+          "",
+          "Silakan melakukan pembayaran sesuai rekening pada invoice/struk. Setelah transfer, mohon kirim bukti pembayaran."
+        ],
+        reminder: [
+          "Halo " + order.clientName + ",",
+          "",
+          "Kami ingin mengingatkan tagihan project *" + order.projectName + "*.",
+          "No invoice: " + invoiceNo,
+          "Sisa tagihan: " + remaining,
+          "",
+          "Jika sudah melakukan pembayaran, mohon kirim bukti transfer agar status kami update."
+        ],
+        done: [
+          "Halo " + order.clientName + ",",
+          "",
+          "Project *" + order.projectName + "* sudah selesai kami kerjakan.",
+          "Mohon dicek hasilnya. Jika ada catatan revisi, silakan kirim dalam satu rangkuman agar bisa kami proses rapi.",
+          "",
+          "Terima kasih sudah mempercayakan order kepada CV. Simpul Project Academy."
+        ],
+        revision: [
+          "Halo " + order.clientName + ",",
+          "",
+          "Catatan revisi untuk project *" + order.projectName + "* sudah kami terima.",
+          "Tim akan meninjau dan mengerjakan penyesuaian sesuai brief revisi.",
+          "",
+          "Terima kasih."
+        ]
+      };
+      return templates[type].join("\n");
+    }
+
     function buildReceiptText(order, settings) {
       return [
         settings.businessName || "CV. Simpul Project Academy",
@@ -2569,3 +2644,4 @@
   </script>
 </body>
 </html>
+

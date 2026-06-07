@@ -5,7 +5,7 @@ Aplikasi web lokal untuk mengelola order artikel, invoice, pembayaran, kas proje
 Kontak admin:
 
 - WhatsApp: 085262608383
-- Email: aroelcendekia@gmial.com
+- Email: aroelcendekia@gmail.com
 
 ## Cara Pakai
 
@@ -25,6 +25,18 @@ Alurnya:
 3. Admin menerima format order rapi di WhatsApp.
 4. Admin memasukkan order ke aplikasi utama.
 
+Form publik sudah memuat checklist brief, target kata, gaya bahasa, target pembaca, keyword, referensi, budget, dan persetujuan ketentuan.
+
+## Template WhatsApp Admin
+
+Di menu **Invoice**, admin bisa memilih template pesan untuk:
+
+- Order diterima
+- Invoice dikirim
+- Pengingat pembayaran
+- Pekerjaan selesai
+- Revisi diterima
+
 ## Catatan
 
 - Aplikasi tetap bisa berjalan tanpa internet.
@@ -34,3 +46,4 @@ Alurnya:
 ## GitHub Pages
 
 Jika file ini diupload ke GitHub, aktifkan GitHub Pages dari branch utama dan root folder repository.
+

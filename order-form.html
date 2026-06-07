@@ -152,6 +152,31 @@
       gap: 10px;
     }
 
+    .service-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .service-pills span {
+      border: 1px solid var(--line);
+      background: #edf1ec;
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .highlight-box {
+      border: 1px solid #d7e3dc;
+      background: #f2f7f4;
+      border-radius: 8px;
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+    }
+
     .step {
       display: grid;
       grid-template-columns: 30px 1fr;
@@ -198,6 +223,35 @@
     .field {
       display: grid;
       gap: 6px;
+    }
+
+    .check-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .check-item,
+    .terms-box {
+      border: 1px solid var(--line);
+      background: #fbfcfb;
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .check-item input,
+    .terms-box input {
+      width: auto;
+      min-height: auto;
+      margin-top: 2px;
+      flex: 0 0 auto;
     }
 
     .full {
@@ -319,6 +373,10 @@
       .form-grid {
         grid-template-columns: 1fr;
       }
+
+      .check-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -340,10 +398,20 @@
         <span class="eyebrow">Order cepat</span>
         <h1>Kirim brief order artikel lewat WhatsApp.</h1>
         <p>Isi kebutuhan project, deadline, budget, dan kontak. Setelah dikirim, admin menerima format order yang rapi sehingga mudah diproses dan dimasukkan ke aplikasi keuangan.</p>
+        <div class="service-pills" aria-label="Jenis layanan">
+          <span>Artikel SEO</span>
+          <span>Copywriting</span>
+          <span>Konten blog</span>
+          <span>Deskripsi produk</span>
+        </div>
         <div class="steps">
           <div class="step"><b>1</b><p>Isi data pemesan dan detail project.</p></div>
           <div class="step"><b>2</b><p>Klik kirim WhatsApp untuk mengirim ringkasan order.</p></div>
           <div class="step"><b>3</b><p>Admin memproses order dan membuat invoice.</p></div>
+        </div>
+        <div class="highlight-box">
+          <strong>Agar hasil lebih tepat</strong>
+          <p>Siapkan keyword, contoh referensi, gaya bahasa, dan target pembaca. Semakin jelas brief, semakin cepat order diproses.</p>
         </div>
         <p class="note">Halaman ini tidak menyimpan data ke server. Data dikirim melalui WhatsApp supaya tetap sederhana dan mudah dicek.</p>
       </section>
@@ -386,12 +454,34 @@
               <input id="quantity" type="number" min="1" step="1" value="1" required>
             </div>
             <div class="field">
+              <label for="wordCount">Target jumlah kata</label>
+              <input id="wordCount" type="number" min="0" step="50" placeholder="Contoh: 800">
+            </div>
+            <div class="field">
               <label for="deadline">Deadline</label>
               <input id="deadline" type="date" required>
             </div>
             <div class="field">
               <label for="budget">Budget perkiraan</label>
               <input id="budget" type="number" min="0" step="1000" placeholder="Contoh: 1500000">
+            </div>
+            <div class="field">
+              <label for="tone">Gaya bahasa</label>
+              <select id="tone">
+                <option>Profesional</option>
+                <option>Santai</option>
+                <option>Persuasif</option>
+                <option>Edukatif</option>
+                <option>Formal akademik</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="audience">Target pembaca</label>
+              <input id="audience" placeholder="Contoh: calon mahasiswa, UMKM, ibu muda">
+            </div>
+            <div class="field full">
+              <label for="keywords">Keyword utama</label>
+              <input id="keywords" placeholder="Pisahkan dengan koma, contoh: jasa artikel SEO, konten website">
             </div>
             <div class="field full">
               <label for="topic">Topik / judul / kebutuhan</label>
@@ -400,6 +490,23 @@
             <div class="field full">
               <label for="reference">Link referensi / brief</label>
               <textarea id="reference" placeholder="Link Google Drive, website referensi, catatan tambahan, dll."></textarea>
+            </div>
+            <div class="field full">
+              <label>Checklist bahan dari pemesan</label>
+              <div class="check-grid">
+                <label class="check-item"><input type="checkbox" name="assets" value="Keyword"> Keyword</label>
+                <label class="check-item"><input type="checkbox" name="assets" value="Referensi kompetitor"> Referensi kompetitor</label>
+                <label class="check-item"><input type="checkbox" name="assets" value="Profil brand"> Profil brand</label>
+                <label class="check-item"><input type="checkbox" name="assets" value="Produk/jasa"> Data produk/jasa</label>
+                <label class="check-item"><input type="checkbox" name="assets" value="Gambar pendukung"> Gambar pendukung</label>
+                <label class="check-item"><input type="checkbox" name="assets" value="Akses dokumen"> Akses dokumen</label>
+              </div>
+            </div>
+            <div class="field full">
+              <label class="terms-box">
+                <input id="terms" type="checkbox" required>
+                <span>Saya memahami bahwa harga, jadwal, jumlah revisi, dan invoice akan dikonfirmasi admin melalui WhatsApp sebelum pekerjaan dimulai.</span>
+              </label>
             </div>
             <div class="field full">
               <div class="actions">
@@ -415,7 +522,7 @@
 
     <footer class="footer">
       <span>CV. Simpul Project Academy</span>
-      <span>WhatsApp: 085262608383 | Email: aroelcendekia@gmial.com</span>
+      <span>WhatsApp: 085262608383 | Email: aroelcendekia@gmail.com</span>
     </footer>
   </div>
 
@@ -469,6 +576,9 @@
 
     function buildMessage() {
       const budget = Number(document.getElementById("budget").value || 0);
+      const assets = [...document.querySelectorAll('input[name="assets"]:checked')]
+        .map(item => item.value)
+        .join(", ");
       return [
         "*ORDER BARU - CV. Simpul Project Academy*",
         "",
@@ -477,14 +587,22 @@
         "Email: " + (value("clientEmail") || "-"),
         "Jenis order: " + value("projectType"),
         "Jumlah tugas: " + value("quantity"),
+        "Target kata: " + (value("wordCount") || "-"),
         "Deadline: " + value("deadline"),
         "Budget: " + (budget ? formatRupiah(budget) : "-"),
+        "Gaya bahasa: " + value("tone"),
+        "Target pembaca: " + (value("audience") || "-"),
+        "Keyword: " + (value("keywords") || "-"),
+        "Bahan tersedia: " + (assets || "-"),
         "",
         "*Topik / kebutuhan*",
         value("topic"),
         "",
         "*Referensi / brief*",
         value("reference") || "-",
+        "",
+        "*Catatan ketentuan*",
+        "Harga, jadwal, revisi, dan invoice menunggu konfirmasi admin.",
         "",
         "Mohon dikonfirmasi untuk harga, jadwal, dan invoice."
       ].join("\n");
@@ -523,3 +641,4 @@
   </script>
 </body>
 </html>
+
