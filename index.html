@@ -760,6 +760,68 @@
       line-height: 1.45;
     }
 
+    .receipt-preview {
+      background: #f7f8f6;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      overflow: auto;
+    }
+
+    .receipt-paper {
+      width: 302px;
+      max-width: 100%;
+      margin: 0 auto;
+      background: #fff;
+      color: #111;
+      border: 1px solid #d8ddd8;
+      box-shadow: 0 8px 20px rgba(32, 37, 34, .08);
+      padding: 14px;
+      font-family: "Courier New", ui-monospace, monospace;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .receipt-paper * {
+      box-sizing: border-box;
+    }
+
+    .receipt-center {
+      text-align: center;
+    }
+
+    .receipt-title {
+      font-weight: 900;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+
+    .receipt-line {
+      border-top: 1px dashed #111;
+      margin: 9px 0;
+    }
+
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .receipt-row span:first-child {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .receipt-total {
+      font-weight: 900;
+      font-size: 14px;
+    }
+
+    .print-only-receipt {
+      display: none;
+    }
+
     .reminder {
       border-left: 4px solid var(--accent-2);
       padding-left: 10px;
@@ -918,8 +980,35 @@
     }
 
     @media print {
+      @page {
+        size: 80mm auto;
+        margin: 4mm;
+      }
+
       body {
         background: #fff;
+      }
+
+      body.receipt-printing > *:not(.print-only-receipt) {
+        display: none !important;
+      }
+
+      body.receipt-printing .print-only-receipt {
+        display: block !important;
+      }
+
+      body.receipt-printing .receipt-paper {
+        width: 72mm;
+        max-width: 72mm;
+        border: 0;
+        box-shadow: none;
+        padding: 0;
+        margin: 0 auto;
+        font-size: 11px;
+      }
+
+      body.receipt-printing .receipt-title {
+        font-size: 12px;
       }
 
       .sidebar,
@@ -983,6 +1072,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
             Masuk aplikasi
           </button>
+          <a class="btn" href="order-form.html" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg>
+            Form order publik
+          </a>
           <button class="btn" id="openDashboardBtn" type="button">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13h8V3H3v10Z"/><path d="M13 21h8V11h-8v10Z"/><path d="M13 3v6h8V3h-8Z"/><path d="M3 21h8v-6H3v6Z"/></svg>
             Lihat ringkasan
@@ -1100,6 +1193,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 16.6A5 5 0 0 0 18 7h-1.3A8 8 0 1 0 4 14.9"/><path d="M12 21v-9"/><path d="M8 16l4-4 4 4"/></svg>
             Restore
           </button>
+          <a class="btn" href="order-form.html" target="_blank" rel="noopener noreferrer">Form Order</a>
           <input id="restoreInput" type="file" accept="application/json,.json" hidden>
           <button class="btn" id="resetDemoBtn" type="button">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>
@@ -1379,8 +1473,17 @@
                   <select id="invoiceOrder"></select>
                 </div>
                 <button class="btn primary" id="markPaidBtn" type="button">Tandai lunas</button>
-                <button class="btn" id="printInvoiceBtn" type="button">Cetak invoice</button>
+                <button class="btn" id="printInvoiceBtn" type="button">Cetak struk / PDF</button>
+                <button class="btn" id="shareWhatsAppBtn" type="button">Bagikan WA</button>
               </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Preview struk</h2>
+            </div>
+            <div class="panel-body receipt-preview">
+              <div id="receiptPreview"></div>
             </div>
           </div>
           <div class="panel">
@@ -1482,6 +1585,7 @@
   </div>
 
   <div class="toast" id="toast"></div>
+  <div class="print-only-receipt" id="receiptPrint"></div>
 
   <script>
     const rupiah = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 });
@@ -1501,7 +1605,7 @@
     const demoState = {
       settings: {
         businessName: "CV. Simpul Project Academy",
-        businessContact: "WhatsApp: 08xx-xxxx-xxxx",
+        businessContact: "WhatsApp: 085262608383 | Email: aroelcendekia@gmial.com",
         businessAddress: "Indonesia",
         bankInfo: "BCA 1234567890 a.n. Nama Usaha",
         invoiceNote: "Pembayaran dapat dilakukan melalui rekening di atas. Mohon konfirmasi setelah transfer."
@@ -1611,6 +1715,8 @@
       unpaidList: document.getElementById("unpaidList"),
       financeBody: document.getElementById("financeBody"),
       invoicePaper: document.getElementById("invoicePaper"),
+      receiptPreview: document.getElementById("receiptPreview"),
+      receiptPrint: document.getElementById("receiptPrint"),
       recapBody: document.getElementById("recapBody"),
       writerBody: document.getElementById("writerBody"),
       reminderList: document.getElementById("reminderList"),
@@ -1656,7 +1762,8 @@
       selectedInvoiceId = e.target.value;
       renderInvoice();
     });
-    document.getElementById("printInvoiceBtn").addEventListener("click", () => window.print());
+    document.getElementById("printInvoiceBtn").addEventListener("click", printReceipt);
+    document.getElementById("shareWhatsAppBtn").addEventListener("click", shareReceiptWhatsApp);
     document.getElementById("markPaidBtn").addEventListener("click", markSelectedPaid);
 
     els.orderForm.addEventListener("submit", event => {
@@ -1940,6 +2047,7 @@
       const order = state.orders.find(item => item.id === selectedInvoiceId);
       if (!order) {
         els.invoicePaper.innerHTML = `<div class="empty">Belum ada order untuk dibuat invoice.</div>`;
+        els.receiptPreview.innerHTML = `<div class="empty">Belum ada struk untuk ditampilkan.</div>`;
         return;
       }
       const settings = state.settings;
@@ -1996,6 +2104,9 @@
           <span>${esc(settings.invoiceNote || "")}</span>
         </div>
       `;
+      const receipt = buildReceiptHtml(order, settings);
+      els.receiptPreview.innerHTML = receipt;
+      els.receiptPrint.innerHTML = receipt;
     }
 
     function renderRecap() {
@@ -2041,6 +2152,43 @@
           <td>${rupiah.format(row.value)}</td>
         </tr>
       `).join("") : `<tr><td colspan="4"><div class="empty">Belum ada tugas selesai untuk penulis/tim bulan ini.</div></td></tr>`;
+    }
+
+    function buildReceiptHtml(order, settings) {
+      const qty = Math.max(Number(order.quantity || 1), 1);
+      const price = Number(order.price || 0);
+      const paid = Number(order.paidAmount || 0);
+      const unit = price / qty;
+      return `
+        <div class="receipt-paper">
+          <div class="receipt-center">
+            <div class="receipt-title">${esc(settings.businessName || "CV. Simpul Project Academy")}</div>
+            <div>${esc(settings.businessContact || "")}</div>
+            <div>${esc(settings.businessAddress || "")}</div>
+          </div>
+          <div class="receipt-line"></div>
+          <div class="receipt-row"><span>No</span><strong>${esc(order.invoiceNo || makeInvoiceNo(order))}</strong></div>
+          <div class="receipt-row"><span>Tanggal</span><span>${formatDate(order.orderDate)}</span></div>
+          <div class="receipt-row"><span>Klien</span><span>${esc(order.clientName)}</span></div>
+          <div class="receipt-row"><span>Project</span><span>${esc(order.projectName)}</span></div>
+          <div class="receipt-line"></div>
+          <div><strong>${esc(order.articleTitle)}</strong></div>
+          <div class="receipt-row"><span>${qty} x ${rupiah.format(unit)}</span><span>${rupiah.format(price)}</span></div>
+          <div class="receipt-line"></div>
+          <div class="receipt-row"><span>Total</span><strong>${rupiah.format(price)}</strong></div>
+          <div class="receipt-row"><span>Dibayar</span><span>${rupiah.format(paid)}</span></div>
+          <div class="receipt-row receipt-total"><span>Sisa</span><span>${rupiah.format(balance(order))}</span></div>
+          <div class="receipt-row"><span>Status</span><span>${esc(order.paymentStatus)}</span></div>
+          <div class="receipt-line"></div>
+          <div><strong>Rekening</strong></div>
+          <div>${esc(settings.bankInfo || "-")}</div>
+          <div class="receipt-line"></div>
+          <div class="receipt-center">
+            <div>${esc(settings.invoiceNote || "Terima kasih.")}</div>
+            <div>-- Simpul Project Academy --</div>
+          </div>
+        </div>
+      `;
     }
 
     function syncProjectOptions() {
@@ -2208,6 +2356,55 @@
       save();
       render();
       toast("Invoice ditandai lunas.");
+    }
+
+    function printReceipt() {
+      const order = state.orders.find(item => item.id === selectedInvoiceId);
+      if (!order) {
+        toast("Pilih invoice dulu.");
+        return;
+      }
+      els.receiptPrint.innerHTML = buildReceiptHtml(order, state.settings);
+      document.body.classList.add("receipt-printing");
+      window.setTimeout(() => window.print(), 80);
+    }
+
+    window.addEventListener("afterprint", () => {
+      document.body.classList.remove("receipt-printing");
+    });
+
+    function shareReceiptWhatsApp() {
+      const order = state.orders.find(item => item.id === selectedInvoiceId);
+      if (!order) {
+        toast("Pilih invoice dulu.");
+        return;
+      }
+      const text = buildReceiptText(order, state.settings);
+      if (navigator.share) {
+        navigator.share({ title: order.invoiceNo || "Invoice", text }).catch(() => {});
+        return;
+      }
+      const url = "https://wa.me/?text=" + encodeURIComponent(text);
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    function buildReceiptText(order, settings) {
+      return [
+        settings.businessName || "CV. Simpul Project Academy",
+        "INVOICE / STRUK",
+        "No: " + (order.invoiceNo || makeInvoiceNo(order)),
+        "Tanggal: " + formatDate(order.orderDate),
+        "Klien: " + order.clientName,
+        "Project: " + order.projectName,
+        "Item: " + order.articleTitle,
+        "Jumlah tugas: " + Number(order.quantity || 0),
+        "Total: " + rupiah.format(Number(order.price || 0)),
+        "Dibayar: " + rupiah.format(Number(order.paidAmount || 0)),
+        "Sisa: " + rupiah.format(balance(order)),
+        "Status: " + order.paymentStatus,
+        "Rekening: " + (settings.bankInfo || "-"),
+        settings.invoiceNote || "Terima kasih."
+      ].join("\n");
     }
 
     function exportCsv() {
