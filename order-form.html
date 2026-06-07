@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Form order artikel CV. Simpul Project Academy.">
+  <title>Form Order - CV. Simpul Project Academy</title>
+  <style>
+    :root {
+      --bg: #f6f7f4;
+      --panel: #ffffff;
+      --ink: #202522;
+      --muted: #69746d;
+      --line: #dfe5df;
+      --accent: #2f6f5e;
+      --accent-2: #345995;
+      --danger: #a33d3d;
+      --shadow: 0 10px 28px rgba(32, 37, 34, .08);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: var(--bg);
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .header, .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 24px;
+      background: rgba(255, 255, 255, .94);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .footer {
+      border-top: 1px solid var(--line);
+      border-bottom: 0;
+      color: var(--muted);
+      font-size: 13px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      gap: 11px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: #24302a;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+
+    .brand strong, .brand span {
+      display: block;
+      line-height: 1.25;
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .status {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: #fff;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .main {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 34px 0;
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(0, 1.2fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .hero, .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 24px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 42px;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .steps {
+      display: grid;
+      gap: 10px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .step b {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: #edf1ec;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .panel-head {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .panel-head h2 {
+      margin: 0;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+
+    .panel-body {
+      padding: 16px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      min-height: 42px;
+      padding: 10px 11px;
+      color: var(--ink);
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      min-height: 42px;
+      padding: 10px 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .btn.secondary {
+      background: #edf1ec;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .preview {
+      margin-top: 14px;
+      border: 1px dashed var(--line);
+      background: #fbfcfb;
+      border-radius: 8px;
+      padding: 12px;
+      white-space: pre-wrap;
+      color: var(--muted);
+      line-height: 1.45;
+      max-height: 260px;
+      overflow: auto;
+    }
+
+    .note {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      background: #24302a;
+      color: #fff;
+      border-radius: 8px;
+      padding: 12px 14px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: .2s ease;
+      max-width: min(420px, calc(100vw - 36px));
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 860px) {
+      .main {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 34px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .header, .footer {
+        padding: 12px 14px;
+        align-items: flex-start;
+      }
+
+      .main {
+        width: calc(100% - 28px);
+        padding: 18px 0;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <div class="brand">
+        <div class="mark">SP</div>
+        <div>
+          <strong>CV. Simpul Project Academy</strong>
+          <span>Form order artikel dan project konten</span>
+        </div>
+      </div>
+      <span class="status" id="connectionStatus">Online form</span>
+    </header>
+
+    <main class="main">
+      <section class="hero">
+        <span class="eyebrow">Order cepat</span>
+        <h1>Kirim brief order artikel lewat WhatsApp.</h1>
+        <p>Isi kebutuhan project, deadline, budget, dan kontak. Setelah dikirim, admin menerima format order yang rapi sehingga mudah diproses dan dimasukkan ke aplikasi keuangan.</p>
+        <div class="steps">
+          <div class="step"><b>1</b><p>Isi data pemesan dan detail project.</p></div>
+          <div class="step"><b>2</b><p>Klik kirim WhatsApp untuk mengirim ringkasan order.</p></div>
+          <div class="step"><b>3</b><p>Admin memproses order dan membuat invoice.</p></div>
+        </div>
+        <p class="note">Halaman ini tidak menyimpan data ke server. Data dikirim melalui WhatsApp supaya tetap sederhana dan mudah dicek.</p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Form order</h2>
+        </div>
+        <div class="panel-body">
+          <form id="orderForm" class="form-grid">
+            <div class="field">
+              <label for="adminWa">Nomor WhatsApp admin</label>
+              <input id="adminWa" value="6285262608383" placeholder="6285262608383" inputmode="numeric">
+            </div>
+            <div class="field">
+              <label for="clientName">Nama pemesan</label>
+              <input id="clientName" required placeholder="Nama lengkap / perusahaan">
+            </div>
+            <div class="field">
+              <label for="clientWa">WhatsApp pemesan</label>
+              <input id="clientWa" required placeholder="628xxxxxxxxxx" inputmode="numeric">
+            </div>
+            <div class="field">
+              <label for="clientEmail">Email</label>
+              <input id="clientEmail" type="email" placeholder="Opsional">
+            </div>
+            <div class="field">
+              <label for="projectType">Jenis order</label>
+              <select id="projectType">
+                <option>Artikel SEO</option>
+                <option>Artikel blog</option>
+                <option>Copywriting landing page</option>
+                <option>Deskripsi produk</option>
+                <option>Konten sosial media</option>
+                <option>Lainnya</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="quantity">Jumlah tulisan/tugas</label>
+              <input id="quantity" type="number" min="1" step="1" value="1" required>
+            </div>
+            <div class="field">
+              <label for="deadline">Deadline</label>
+              <input id="deadline" type="date" required>
+            </div>
+            <div class="field">
+              <label for="budget">Budget perkiraan</label>
+              <input id="budget" type="number" min="0" step="1000" placeholder="Contoh: 1500000">
+            </div>
+            <div class="field full">
+              <label for="topic">Topik / judul / kebutuhan</label>
+              <textarea id="topic" required placeholder="Tulis topik, keyword, target pembaca, gaya bahasa, dan kebutuhan lain."></textarea>
+            </div>
+            <div class="field full">
+              <label for="reference">Link referensi / brief</label>
+              <textarea id="reference" placeholder="Link Google Drive, website referensi, catatan tambahan, dll."></textarea>
+            </div>
+            <div class="field full">
+              <div class="actions">
+                <button class="btn primary" type="submit">Kirim via WhatsApp</button>
+                <button class="btn secondary" id="copyBtn" type="button">Salin format order</button>
+              </div>
+            </div>
+          </form>
+          <div class="preview" id="previewText">Preview format order akan muncul di sini.</div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>CV. Simpul Project Academy</span>
+      <span>WhatsApp: 085262608383 | Email: aroelcendekia@gmial.com</span>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const savedAdminKey = "simpul-order-form-admin-wa";
+    const today = new Date();
+    const todayStr = [
+      today.getFullYear(),
+      String(today.getMonth() + 1).padStart(2, "0"),
+      String(today.getDate()).padStart(2, "0")
+    ].join("-");
+
+    const form = document.getElementById("orderForm");
+    const adminWa = document.getElementById("adminWa");
+    const previewText = document.getElementById("previewText");
+    const toastEl = document.getElementById("toast");
+
+    adminWa.value = localStorage.getItem(savedAdminKey) || adminWa.value || "6285262608383";
+    document.getElementById("deadline").value = todayStr;
+    form.addEventListener("input", updatePreview);
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      const phone = cleanPhone(adminWa.value);
+      if (!phone) {
+        toast("Isi nomor WhatsApp admin dulu.");
+        adminWa.focus();
+        return;
+      }
+      localStorage.setItem(savedAdminKey, phone);
+      const url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(buildMessage());
+      window.open(url, "_blank", "noopener,noreferrer");
+    });
+
+    document.getElementById("copyBtn").addEventListener("click", async () => {
+      const text = buildMessage();
+      try {
+        await navigator.clipboard.writeText(text);
+        toast("Format order disalin.");
+      } catch {
+        previewText.textContent = text;
+        toast("Silakan salin dari preview.");
+      }
+    });
+
+    updatePreview();
+    updateConnection();
+    window.addEventListener("online", updateConnection);
+    window.addEventListener("offline", updateConnection);
+
+    function buildMessage() {
+      const budget = Number(document.getElementById("budget").value || 0);
+      return [
+        "*ORDER BARU - CV. Simpul Project Academy*",
+        "",
+        "Nama: " + value("clientName"),
+        "WhatsApp: " + value("clientWa"),
+        "Email: " + (value("clientEmail") || "-"),
+        "Jenis order: " + value("projectType"),
+        "Jumlah tugas: " + value("quantity"),
+        "Deadline: " + value("deadline"),
+        "Budget: " + (budget ? formatRupiah(budget) : "-"),
+        "",
+        "*Topik / kebutuhan*",
+        value("topic"),
+        "",
+        "*Referensi / brief*",
+        value("reference") || "-",
+        "",
+        "Mohon dikonfirmasi untuk harga, jadwal, dan invoice."
+      ].join("\n");
+    }
+
+    function updatePreview() {
+      previewText.textContent = buildMessage();
+    }
+
+    function value(id) {
+      return document.getElementById(id).value.trim();
+    }
+
+    function cleanPhone(phone) {
+      return String(phone || "").replace(/[^\d]/g, "").replace(/^0/, "62");
+    }
+
+    function formatRupiah(amount) {
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0
+      }).format(amount);
+    }
+
+    function updateConnection() {
+      document.getElementById("connectionStatus").textContent = navigator.onLine ? "Online form" : "Offline - isi dulu, kirim saat online";
+    }
+
+    function toast(message) {
+      toastEl.textContent = message;
+      toastEl.classList.add("show");
+      window.clearTimeout(toast.timer);
+      toast.timer = window.setTimeout(() => toastEl.classList.remove("show"), 2200);
+    }
+  </script>
+</body>
+</html>
